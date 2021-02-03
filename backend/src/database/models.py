@@ -65,6 +65,13 @@ class Drink(db.Model):
             'title': self.title,
             'recipe': json.loads(self.recipe)
         }
+    def format(self):
+        return {
+        'id': self.id,
+        'title': self.title,
+        'recipe': json.loads(self.recipe)
+
+        }
 
     '''
     insert()
@@ -76,8 +83,12 @@ class Drink(db.Model):
             drink.insert()
     '''
     def insert(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            print('insert:',self)
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            print(e)
 
     '''
     delete()

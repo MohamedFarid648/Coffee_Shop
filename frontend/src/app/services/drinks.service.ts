@@ -108,19 +108,29 @@ export class DrinksService {
   }
 
   saveDrink(drink: Drink) {
+    console.log(drink);
     if (drink.id >= 0) { // patch
       this.http.patch(this.url + '/drinks/' + drink.id, drink, this.getHeaders())
       .subscribe( (res: any) => {
+        console.log(res);
         if (res.success) {
-          this.drinksToItems(res.drinks);
+        //this.drinksToItems(res.drinks);
+        this.getDrinks();
         }
+      },err=>{
+        console.log(err);
       });
     } else { // insert
       this.http.post(this.url + '/drinks', drink, this.getHeaders())
       .subscribe( (res: any) => {
+        console.log(res);
         if (res.success) {
-          this.drinksToItems(res.drinks);
+          //this.drinksToItems(res.drinks);
+          this.getDrinks();
+
         }
+      },err=>{
+        console.log(err);
       });
     }
 

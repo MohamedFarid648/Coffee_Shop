@@ -30,5 +30,17 @@
             <ion-icon name="add-circle"></ion-icon>
         </ion-card-content>
       </ion-card>
+
+      <ion-card
+      style="opacity: .7; align-items: center; display: flex; flex-direction: column; cursor: pointer;" 
+      *ngIf="!auth.can('post:drinks')">
+         <ion-card-header>
+           <ion-card-title>Create Drink</ion-card-title>
+         </ion-card-header>
+       
+         <ion-card-content>
+           <h1>You can't add drinks (Not Authorized)</h1>
+         </ion-card-content>
+       </ion-card>
 </div>
 </ion-content>
