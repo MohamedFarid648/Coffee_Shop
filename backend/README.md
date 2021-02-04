@@ -16,8 +16,12 @@ We recommend working within a virtual environment whenever using Python for proj
 
 Once you have your virtual environment setup and running, install dependencies by naviging to the `/backend` directory and running:
 
+ pip3 install -U  Flask
+ pip3 install -U  Werkzeug
+ pip3 freeze > requirements.txt
+
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 This will install all of the required packages we selected within the `requirements.txt` file.
