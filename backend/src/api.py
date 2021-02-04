@@ -16,9 +16,9 @@ CORS(app)
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 '''
-#db_drop_and_create_all()
+# db_drop_and_create_all()
 
-## ROUTES
+# # ROUTES
 '''
 @TODO implement endpoint
     GET /drinks
@@ -28,15 +28,14 @@ CORS(app)
         or appropriate status code indicating reason for failure
 '''
 
-@app.route('/drinks',methods=['GET'])
+
+@app.route('/drinks', methods=['GET'])
 def getDrinks():
 
     drinks = Drink.query.all()
     formatedDrinks = [d.short() for d in drinks]
 
-    return jsonify( {"success": True, "drinks": formatedDrinks})
-
-
+    return jsonify({"success": True, "drinks": formatedDrinks})
 
 '''
 @TODO implement endpoint
@@ -46,12 +45,14 @@ def getDrinks():
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
-@app.route('/drinks-detail',methods=['GET'])
+
+
+@app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
 def getDrinksDetails(payload):
     drinks = Drink.query.all()
     formatedDrinks = [d.long() for d in drinks]
-    return jsonify( {"success": True, "drinks": formatedDrinks})
+    return jsonify({"success": True, "drinks": formatedDrinks})
 
 '''
 @TODO implement endpoint
@@ -63,20 +64,20 @@ def getDrinksDetails(payload):
         or appropriate status code indicating reason for failure
 '''
 
-#json.loads take a string as input and returns a dictionary as output.
+# json.loads take a string as input and returns a dictionary as output.
 
-#json.dumps take a dictionary as input and returns a string as output.
+# json.dumps take a dictionary as input and returns a string as output.
 
-@app.route('/drinks',methods=['POST'])
+
+@app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
 def postDrink(payload):
-    
     body = request.get_json()
     try:
-        req_title =  body.get('title')
-        req_recipe =  body.get('recipe')
-        recipeList=[]
-        if(not isinstance(req_recipe,list)):
+        req_title = body.get('title')
+        req_recipe = body.get('recipe')
+        recipeList = []
+        if(not isinstance(req_recipe, list)):
             print('not list')
             recipeList.append(req_recipe)
         else:
@@ -87,13 +88,11 @@ def postDrink(payload):
         drink.title = req_title
         drink.recipe = json.dumps(recipeList)
         drink.insert()
-        return jsonify({"success": True, "drink":drink.long()})
+        return jsonify({"success": True, "drink": drink.long()})
 
     except Exception as e:
         print(e)
         abort(422)
-    
-
 
 '''
 @TODO implement endpoint
@@ -107,29 +106,33 @@ def postDrink(payload):
         or appropriate status code indicating reason for failure
 '''
 
-@app.route('/drinks/<int:id>',methods=['PATCH'])
+
+@app.route('/drinks/<int:id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
-def patchDrink(payload,id):
+def patchDrink(payload, id):
     print(id)
+    drink = Drink.query.filter(Drink.id == id).one_or_none()
+    print(drink)
+    if(drink is None):
+        abort(404)
     try:
         body = request.get_json()
-        req_title =  body.get('title')
-        req_recipe =  body.get('recipe')
-        recipeList=[]
-        if(not isinstance(req_recipe,list)):
+        req_title = body.get('title')
+        req_recipe = body.get('recipe')
+        recipeList = []
+        if(not isinstance(req_recipe, list)):
             print('not list')
             recipeList.append(req_recipe)
         else:
             print('is list')
             recipeList = req_recipe
 
-        drink = Drink.query.filter(Drink.id == id).one_or_none()
         drink.title = req_title
         drink.recipe = json.dumps(recipeList)
-        drink.update()      
+        drink.update()
         return jsonify({
-              'success':True,
-              'drinks':[drink.long()]
+            'success': True,
+            'drinks': [drink.long()]
         })
     except Exception as e:
         print(e)
@@ -145,32 +148,40 @@ def patchDrink(payload,id):
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
-@app.route('/drinks/<int:id>',methods=['DELETE'])
+
+
+@app.route('/drinks/<int:id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
-def deleteDrink(payload,id):
+def deleteDrink(payload, id):
     print(id)
+    drink = Drink.query.filter(Drink.id == id).one_or_none()
+    print(drink)
+    if(drink is None):
+        abort(404)
     try:
-        drink = Drink.query.filter(Drink.id == id).one_or_none()
-        drink.delete()        
+
+        drink.delete()
         return jsonify({
-              'success':True,
-              'delete':id
+            'success': True,
+            'delete': id
         })
     except Exception as e:
         print(e)
         abort(422)
 
-## Error Handling
+# # Error Handling
 '''
 Example error handling for unprocessable entity
 '''
+
+
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
-                    "success": False, 
-                    "error": 422,
-                    "message": "unprocessable"
-                    }), 422
+        "success": False,
+        "error": 422,
+        "message": "unprocessable"
+    }), 422
 
 '''
 @TODO implement error handlers using the @app.errorhandler(error) decorator
@@ -188,13 +199,14 @@ def unprocessable(error):
     error handler should conform to general task above 
 '''
 
+
 @app.errorhandler(404)
 def not_found(error):
-      return jsonify({
-          "success": False,
-          "error": 404,
-          "message": error.description
-          }), 404
+    return jsonify({
+        "success": False,
+        "error": 404,
+        "message": error.description
+    }), 404
 
 '''
 @TODO implement error handler for AuthError
@@ -204,7 +216,7 @@ def not_found(error):
 
 @app.errorhandler(AuthError)
 def authErr(error):
-      return jsonify({
-          "success": False,
-          "error": error.error,
-          }), error.status_code
+    return jsonify({
+        "success": False,
+        "error": error.error,
+    }), error.status_code
