@@ -37,6 +37,7 @@ def getDrinks():
 
     return jsonify({"success": True, "drinks": formatedDrinks})
 
+
 '''
 @TODO implement endpoint
     GET /drinks-detail
@@ -53,6 +54,7 @@ def getDrinksDetails(payload):
     drinks = Drink.query.all()
     formatedDrinks = [d.long() for d in drinks]
     return jsonify({"success": True, "drinks": formatedDrinks})
+
 
 '''
 @TODO implement endpoint
@@ -93,6 +95,7 @@ def postDrink(payload):
     except Exception as e:
         print(e)
         abort(422)
+
 
 '''
 @TODO implement endpoint
@@ -138,6 +141,7 @@ def patchDrink(payload, id):
         print(e)
         abort(422)
 
+
 '''
 @TODO implement endpoint
     DELETE /drinks/<id>
@@ -169,6 +173,7 @@ def deleteDrink(payload, id):
         print(e)
         abort(422)
 
+
 # # Error Handling
 '''
 Example error handling for unprocessable entity
@@ -182,6 +187,7 @@ def unprocessable(error):
         "error": 422,
         "message": "unprocessable"
     }), 422
+
 
 '''
 @TODO implement error handlers using the @app.errorhandler(error) decorator
@@ -207,6 +213,7 @@ def not_found(error):
         "error": 404,
         "message": error.description
     }), 404
+
 
 '''
 @TODO implement error handler for AuthError
